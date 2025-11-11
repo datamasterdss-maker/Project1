@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Midpoint Calculator with Graph</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        input {
+            width: 60px;
+            margin: 5px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 5px 15px;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        canvas {
+            border: 1px solid black;
+            margin-top: 20px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Midpoint Calculator with Graph</h1>
+    <p>Enter the coordinates of two points:</p>
+
+    <label>x1: <input type="number" id="x1" step="any"></label>
+    <label>y1: <input type="number" id="y1" step="any"></label><br>
+
+    <label>x2: <input type="number" id="x2" step="any"></label>
+    <label>y2: <input type="number" id="y2" step="any"></label><br>
+
+    <button onclick="calculateMidpoint()">Calculate Midpoint</button>
+
+    <p id="result"></p>
+    <canvas id="graph" width="400" height="400"></canvas>
+
+    <script>
+        const canvas = document.getElementById("graph");
+        const ctx = canvas.getContext("2d");
+        const width = canvas.width;
+        const height = canvas.height;
+
+        function drawAxes() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 1;
+
+            // X-axis
+            ctx.beginPath();
+            ctx.moveTo(0, height / 2);
+            ctx.lineTo(width, height / 2);
+            ctx.stroke();
+
+            // Y-axis
+            ctx.beginPath();
+            ctx.moveTo(width / 2, 0);
+            ctx.lineTo(width / 2, height);
+            ctx.stroke();
+
+            // Optional: grid
+            ctx.strokeStyle = "#ddd";
+            for (let i = 0; i <= width; i += 20) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, height);
+                ctx.stroke();
+            }
+            for (let i = 0; i <= height; i += 20) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(width, i);
+                ctx.stroke();
+            }
+        }
+
+        function plotPoint(x, y, color, label) {
+            const scale = 20; // pixels per unit
+            const cx = width / 2 + x * scale;
+            const cy = height / 2 - y * scale;
+
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = "black";
+            ctx.fillText(label, cx + 5, cy - 5);
+        }
+
+        function calculateMidpoint() {
+            let x1 = parseFloat(document.getElementById("x1").value);
+            let y1 = parseFloat(document.getElementById("y1").value);
+            let x2 = parseFloat(document.getElementById("x2").value);
+            let y2 = parseFloat(document.getElementById("y2").value);
+
+            if (isNaN(x1) || isNaN(y1) || isNaN(x2) || isNaN(y2)) {
+                document.getElementById("result").innerText = "Please enter all coordinates.";
+                return;
+            }
+
+            let midX = (x1 + x2) / 2;
+            let midY = (y1 + y2) / 2;
+
+            document.getElementById("result").innerText =
+                "The midpoint of the line is: (" + midX + ", " + midY + ")";
+
+            drawAxes();
+            plotPoint(x1, y1, "red", "A");
+            plotPoint(x2, y2, "blue", "B");
+            plotPoint(midX, midY, "green", "M");
+        }
+
+        drawAxes(); // draw axes on page load
+    </script>
+</body>
+</html>
